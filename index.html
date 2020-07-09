@@ -188,8 +188,8 @@ Mark Dieckmann
 <p>When it's the end of a season, the URL for the next match will return an empty json object. For testing purposes you can use our DEV environment: <br>
       <pre><code>var url = https://dev-app.goalent.io/getNextMatch?token={token}</code></pre> to fetch the next match and <br>
       <pre><code>var url = https://dev-webview.goalent.io/gMatchId={matchId}</code></pre> to open the webview.</p>
-      <p>This environment however wont return the next match for your team, but one of the next upcoming <i>debug</i> matches. A debug match is a match from the past and has been recorded.
-          These kind of matches only appear during specific time frames between Monday and Friday (CET/CEST):
+      <p>This environment however won't return the next match for your team, but one of the next upcoming <i>debug</i> matches. A debug match is a match from the past and has been recorded.
+          These kinds of matches only appear during specific time frames between Monday and Friday (CET/CEST):
           <ul>
       <li>06:15 – 08:15</li>
       <li>09:15 – 11:15</li>
@@ -204,6 +204,7 @@ Mark Dieckmann
 <li>No next match is returned
 <ul>
 <li>If the API call to get the next match returns an empty result, this usually means that the next match has not been officially scheduled yet. This can happen when it’s the end of a season or some unforeseen circumstances.</li>
+<li>See also: <a href="#dev-environment">Testing when there is no upcoming match</a></li>
 </ul>
 </li>
 <li>Blocked by CORS policy
