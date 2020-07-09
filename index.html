@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+      html, body {
+          height: 100%;
+          margin: 0;
+      }
+
+      #gameContent {
+        position: fixed;
+        width: 100%;
+        height: 90%;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        overflow: hidden;
+      }
+      iframe{
+          overflow:hidden;
+      }
+  </style>
+</head>
+<body>
+  <div id="gameContent">
+      <Button onclick="createFrame()">Start Game</Button>
+
+      <div id="teamInfo"></div>
+      <div id="countdown"></div>
+  </div>
+
+  <script>
+
+  var matchId = 0;
+  var startAt = 1591719902000;
+  var awayTeamName= "";
+  var homeTeamName= "";
+
+  function createFrame() {
+    var ifrm = document.createElement("iframe");
+    ifrm.setAttribute("src", "http://goalent.webview.s3-website.eu-central-1.amazonaws.com/?sound=on&gMatchId=" + matchId);
+    ifrm.style = "position: relative; height: 100%; width: 90%;";
+    document.getElementById("gameContent").replaceWith(ifrm);
+  }
+
+  window.onload = function() {
+    var countdownElement = document.getElementById("countdown");
+    var teamInfoElement = document.getElementById("teamInfo");
+    var x = setInterval(function() {
+      var now = new Date().getTime();
+      var remainingTime = Math.round((startAt-now)/1000);
+      countdownElement.innerHTML = (
+					"<p>The match starts in: "
+				    + new Date(remainingTime * 1000).toISOString().substr(11, 8)
+				    + "</p>"
+				);
+      teamInfoElement.innerHTML = (
+        "<p>You are following " +decodeURIComponent((homeTeamName).replace(/\+/g, '%20'))+ "</p>" +
+        "<p>Your next game is against " +decodeURIComponent((awayTeamName).replace(/\+/g, '%20'))+ "</p>"
+      );
+    }, 1000);
+
+    fetch("http://goalent-dev-game.eu-central-1.elasticbeanstalk.com/getNextMatch?token=ed1b39e2-c65e-349d-b3ad-6f2f4b166d7e", {
+      method: 'GET',
+      headers:{
+              'Accept':'application/json',
+              'Content-Type':'application/json',
+          }
+    })
+    .then(
+      function(response) {
+        return response.json();
+      }
+    )
+    .then(
+      function(data) {
+        //here "data" is the response json object, containing the match information
+	      matchId = data.matchId;
+	      startAt = data.startTimeUTC;
+	      //here "myTeamId" is the ID of your team provided with the {token}
+	      //the data is structured by home/away team
+	      if (data.homeTeamId == {myTeamId}) {
+	        myTeamName = data.homeTeamName;
+	        enemyTeamName = data.awayTeamName;
+	      } else {
+	        myTeamName = data.awayTeamName;
+	        enemyTeamName = data.homeTeamName;
+	      }
+      }
+    )
+    .catch(function(err) {
+      console.log('Fetch Error :-S', err);
+    });
+  };
+
+  </script>
+
+
+</body>
+</html>
